@@ -1,0 +1,20 @@
+{
+  "name": "nodejs_training",
+  "version": "1.0.0",
+  "description": "Nodejs Training",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EugeneCh/nodejs_training.git"
+  },
+  "author": "Eugene Chaika <eugenik10@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EugeneCh/nodejs_training/issues"
+  },
+  "homepage": "https://github.com/EugeneCh/nodejs_training#readme"
+}
