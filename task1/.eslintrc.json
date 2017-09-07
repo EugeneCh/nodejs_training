@@ -2,16 +2,9 @@
   "plugins": ["node"],
   "extends": ["eslint:recommended", "plugin:node/recommended"],
   "parser": "babel-eslint",
-  "env": {
-    "node": true,
-    "es6": true
-  },
   "rules": {
     "node/exports-style": ["error", "module.exports"],
     "no-console":"off",
     "node/no-unsupported-features": "off"
-  },
-  "parserOptions": {
-    "sourceType": "module"
   }
 }
