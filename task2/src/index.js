@@ -10,7 +10,9 @@ console.log(`Name ${config.name} from config`);
 new User();
 new Product();
 
-new Importer();
+let importer = new Importer();
 let dirwatcher = new DirWatcher();
 
 dirwatcher.watch("data", 10000);
+
+importer.importSync("data");
