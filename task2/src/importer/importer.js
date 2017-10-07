@@ -14,11 +14,11 @@ export class Importer extends EventEmitter {
     }
 
     // should return a promise
-    importAsync(path) {
+    static importAsync(path) {
 
     }
 
-    importSync(path) {
+    static importSync(path) {
         readdir(path, (err, files) => {
             if (err) {
                 console.error(err);
@@ -36,7 +36,8 @@ export class Importer extends EventEmitter {
                                 .on('json', jsonobj => {
                                     const filename = file.substr(0, file.lastIndexOf('.'));
                                     const jsonFilePath = `json/${filename}.json`;
-                                    writeFile(jsonFilePath, jsonobj, err => {
+
+                                    writeFile(jsonFilePath, JSON.stringify(jsonobj), err => {
                                         if(err) {
                                             console.error(err);
                                         }

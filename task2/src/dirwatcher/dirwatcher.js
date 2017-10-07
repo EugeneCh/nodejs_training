@@ -13,7 +13,6 @@ export class DirWatcher extends EventEmitter {
                 if (lastModifiedDate !== stats.mtimeMs) {
                     lastModifiedDate = stats.mtimeMs;
 
-                    // console.log(path);
                     console.log(`Directory ${path} changed. Emitting event...`);
                     this.emit('dirwatcher:changed', path);
                 }
@@ -23,6 +22,8 @@ export class DirWatcher extends EventEmitter {
         this.on('dirwatcher:changed', path => {
             console.log(path);
             console.log(`Event for directory ${path} was caught`);
+
+            Importer.importSync(path);
         });
     }
 }
