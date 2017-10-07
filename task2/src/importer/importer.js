@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 import {readdir, writeFile} from 'fs';
-import {promisify} from 'utils';
+// import {promisify} from 'utils';
 import csv from 'csvtojson';
 import mkdirp from 'mkdirp';
 
@@ -9,9 +9,11 @@ export class Importer extends EventEmitter {
         super();
         this.on('dirwatcher:changed', path => {
             console.log(path);
+            console.log(`Event for directory ${path} was caught`);
         });
     }
 
+    // should return a promise
     importAsync(path) {
 
     }
@@ -34,7 +36,7 @@ export class Importer extends EventEmitter {
                                 .on('json', jsonobj => {
                                     const filename = file.substr(0, file.lastIndexOf('.'));
                                     const jsonFilePath = `json/${filename}.json`;
-                                    writeFile(jsonFilePath, jsonobj.toJSON(), err => {
+                                    writeFile(jsonFilePath, jsonobj, err => {
                                         if(err) {
                                             console.error(err);
                                         }
