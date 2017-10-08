@@ -24,12 +24,12 @@ export class DirWatcher extends EventEmitter {
         this.on('dirwatcher:changed', path => {
             console.log(`Event for directory ${colors.green(path)} was caught`);
 
-            // Importer.importSync(path);
+            Importer.importSync(path);
 
-            Importer.importAsync(path)
-                .then(data => {
-                    console.log(data);
-                });
+            // Importer.importAsync(path)
+            //     .then(data => {
+            //         console.log(data);
+            //     });
         });
     }
 }

@@ -9,17 +9,29 @@ export class Importer extends EventEmitter {
     // should return a promise
     static importAsync(path) {
         let readdirAsync = promisify(readdir);
+        let data = [];
 
+        console.log(`Reading from ${colors.green(path)} directory`);
         return readdirAsync(path)
             .then(files => {
-                files.forEach(file => {
-                    const csvFilePath = `${path}/${file}`;
-                    csv()
-                        .fromFile(csvFilePath)
-                        .on('end_parsed', jsonArrayObj => {
-                            return jsonArrayObj;
-                        });
-                })
+                return new Promise((res, rej) => {
+                    files.forEach((file, index, array) => {
+                        const csvFilePath = `${path}/${file}`;
+                        csv()
+                            .fromFile(csvFilePath)
+                            .on('end_parsed', jsonArrayObj => {
+                                if (!jsonArrayObj) {
+                                    rej('Conversion failed!');
+                                }
+                                data.push(jsonArrayObj);
+
+                                if (index === array.length - 1) {
+                                    console.log('Resolving promise with transformed data after last iteration');
+                                    res(data);
+                                }
+                            });
+                    });
+                });
             });
     }
 
