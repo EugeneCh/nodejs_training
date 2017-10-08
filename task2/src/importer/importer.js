@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import {readdir, writeFile} from 'fs';
+import {promisify} from 'util';
 import csv from 'csvtojson';
 import mkdirp from 'mkdirp';
 import colors from 'colors';
@@ -7,7 +8,19 @@ import colors from 'colors';
 export class Importer extends EventEmitter {
     // should return a promise
     static importAsync(path) {
+        let readdirAsync = promisify(readdir);
 
+        return readdirAsync(path)
+            .then(files => {
+                files.forEach(file => {
+                    const csvFilePath = `${path}/${file}`;
+                    csv()
+                        .fromFile(csvFilePath)
+                        .on('end_parsed', jsonArrayObj => {
+                            return jsonArrayObj;
+                        });
+                })
+            });
     }
 
     static importSync(path) {
