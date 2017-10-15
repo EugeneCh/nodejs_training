@@ -3,7 +3,7 @@ import colors from 'colors';
 
 import {createReadStream, createWriteStream} from 'fs';
 import through2 from 'through2';
-import csvParse from 'csv-parse';
+import csv from 'csvtojson';
 import split2 from 'split2';
 import mkdirp from 'mkdirp';
 
@@ -19,7 +19,7 @@ function transformFile(filePath) {
     let path = BASE_PATH + filePath;
     let newPath = `../../json/${filePath.substr(0, filePath.lastIndexOf('.'))}.json`;
     let readStream = createReadStream(path);
-    let writeStream = createWriteStream(newPath);
+    let writeStream;
 
     console.log(`Creating directory ${colors.green("json")} for new files`);
 
@@ -29,17 +29,14 @@ function transformFile(filePath) {
         } else {
             console.log(`Reading file ${colors.green(filePath)}`);
 
+            writeStream = createWriteStream(newPath);
             readStream
-                .pipe(csvParse({auto_parse: true}))
                 .pipe(through2({objectMode: true}, function (chunk, encoding, callback) {
-                    this.push(JSON.stringify({
-                        id: chunk[0],
-                        name: chunk[1],
-                        brand: chunk[2],
-                        company: chunk[3],
-                        price: chunk[4],
-                        isbn: chunk[5]
-                    }));
+                    csv()
+                        .fromString(chunk.toString())
+                        .on('json', json => {
+                            this.push(JSON.stringify(json));
+                        });
                     callback();
                 }))
                 .pipe(writeStream)
