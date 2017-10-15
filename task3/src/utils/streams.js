@@ -1,37 +1,72 @@
 import minimist from 'minimist';
 import colors from 'colors';
 
-import {createReadStream} from 'fs';
+import {createReadStream, createWriteStream} from 'fs';
+import through2 from 'through2';
+import csvParse from 'csv-parse';
+import split2 from 'split2';
+import mkdirp from 'mkdirp';
 
 const BASE_PATH = '../../data/';
 
 function  inputOutput(filepath) {
     let path = BASE_PATH + filepath;
-    console.log('hello from IO function');
-    console.log(path);
+    createReadStream(path)
+        .pipe(process.stdout);
 }
 
 function transformFile(filePath) {
     let path = BASE_PATH + filePath;
-    console.log('Hello from transformFile function');
-    console.log(path);
-
+    let newPath = `../../json/${filePath.substr(0, filePath.lastIndexOf('.'))}.json`;
     let readStream = createReadStream(path);
-    readStream.on('data', (data) => {
-        console.log(data);
+    let writeStream = createWriteStream(newPath);
+
+    console.log(`Creating directory ${colors.green("json")} for new files`);
+
+    mkdirp(`../../json`, err => {
+        if (err) {
+            console.error(err);
+        } else {
+            console.log(`Reading file ${colors.green(filePath)}`);
+
+            readStream
+                .pipe(csvParse({auto_parse: true}))
+                .pipe(through2({objectMode: true}, function (chunk, encoding, callback) {
+                    this.push(JSON.stringify({
+                        id: chunk[0],
+                        name: chunk[1],
+                        brand: chunk[2],
+                        company: chunk[3],
+                        price: chunk[4],
+                        isbn: chunk[5]
+                    }));
+                    callback();
+                }))
+                .pipe(writeStream)
+                .on('finish', () => {
+                    console.log(`File ${colors.green(filePath.substr(0, filePath.lastIndexOf('.')) + '.json')} was created`);
+                });
+        }
     });
 }
 
 function transform() {
-    console.log('Hello from transform function');
-}
+    let readStream = through2({ objectMode: true }, function(chunk, enc, callback) {
+        let string = chunk.toString();
+        let result = string.replace(/\n/, '').toUpperCase().split(/[ \t]/);
 
-function httpClient() {
+        this.push(result);
+        callback()
+    });
 
-}
+    readStream.on('data', data => {
+        process.stdout.write(data.join(' '));
+        process.stdout.write('\n');
+    });
 
-function httpServer() {
-
+    process.stdin
+        .pipe(split2())
+        .pipe(readStream);
 }
 
 function printHelpMessage() {
