@@ -1,11 +1,13 @@
 import minimist from 'minimist';
 import colors from 'colors';
 
-import {createReadStream, createWriteStream} from 'fs';
+import {createReadStream, createWriteStream, readdir, readFile, writeFile} from 'fs';
 import through2 from 'through2';
 import csv from 'csvtojson';
 import split2 from 'split2';
 import mkdirp from 'mkdirp';
+import async from 'async';
+import request from 'request';
 
 const BASE_PATH = '../../data/';
 
@@ -73,10 +75,42 @@ function printHelpMessage() {
     console.log(message);
 }
 
+function cssBundler(path) {
+    const CSS_EXTERNAL = 'https://www.epam.com/etc/clientlibs/foundation/main.min.fc69c13add6eae57cd247a91c7e26a15.css';
+    const dirPath = '../../' + path;
+    const bundlePath = dirPath + '/bundle.css';
+    readdir('../../' + path, (err, files) => {
+        if (err) {
+            console.error(err);
+        }
+        files = files.map(file => `${dirPath}/${file}`);
+
+        async.map(files, readFile, (err, results) => {
+            if (err) {
+                console.error(err);
+            }
+            request(CSS_EXTERNAL, (error, response, body) => {
+                if (error) {
+                    return console.error(error);
+                }
+                results.push(body);
+
+                writeFile(bundlePath, results, err => {
+                    if(err) {
+                        console.error(err);
+                    }
+
+                    console.log(`File ${colors.green('bundle.css')} has been created!`);
+                });
+            });
+        });
+    });
+}
+
 
 const args = minimist(process.argv.slice(2), {
     boolean: true,
-    alias: {'help': 'h', 'action': 'a', 'file': 'f'},
+    alias: {'help': 'h', 'action': 'a', 'file': 'f', 'path': 'p'},
     stopEarly: true,
     unknown: (arg) => {
         if (arg !== 'help' && arg !== 'h' && arg !== 'abc') {
@@ -99,10 +133,8 @@ if (keys.length <= 1) {
             transformFile(args.file);
         } else if (args.action === 'transform') {
             transform();
+        } else if (args.action === 'bundle-css') {
+            cssBundler(args.path);
         }
     }
 }
-
-
-//node streams.js -a io -f MOCK_DATA.csv
-//node streams.js -a transform-file -f MOCK_DATA.csv
