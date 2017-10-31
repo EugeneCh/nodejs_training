@@ -1,5 +1,4 @@
 import http from 'http';
-import {createReadStream} from 'fs';
 
 http.createServer()
     .on('request', (req, res) => {
