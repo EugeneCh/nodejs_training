@@ -15,12 +15,12 @@ routes.get('/api/products', (req, res) => {
 });
 
 routes.get('/api/products/:id', (req, res) => {
-    const product = Products.getProductById(req.params.id);
+    const product = Products.getProductById(+req.params.id);
     res.json(product);
 });
 
 routes.get('/api/products/:id/reviews', (req, res) => {
-    const review = Products.getReviewsById(req.params.id);
+    const review = Products.getReviewsById(+req.params.id);
     res.json(review);
 });
 
