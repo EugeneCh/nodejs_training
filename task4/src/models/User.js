@@ -1,6 +1,9 @@
-export default class User {
-    constructor(name, email) {
-        this.name = name;
-        this.email = email;
+export default function User(id, name) {
+    this.id = id;
+    this.name = name;
+
+    return {
+        id: this.id,
+        name: this.name
     }
 }

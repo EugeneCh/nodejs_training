@@ -1,6 +1,7 @@
-export default class Review {
-    constructor(name, value) {
-        this.name = name;
-        this.value = value;
+export default function Review(id) {
+    this.id = id;
+
+    return {
+        id: this.id
     }
 }

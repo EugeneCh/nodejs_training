@@ -1,5 +1,8 @@
 import {Router} from 'express';
 
+import {Products} from "../controllers/products.controller";
+import {Users} from "../controllers/users.controller";
+
 const routes = Router();
 
 routes.get('/', (req, res) => {
@@ -7,23 +10,28 @@ routes.get('/', (req, res) => {
 });
 
 routes.get('/api/products', (req, res) => {
-    res.json({product: 'all products'});
+    const products = Products.all();
+    res.json(products);
 });
 
 routes.get('/api/products/:id', (req, res) => {
-    res.json({product: 'specific product'});
+    const product = Products.getProductById(req.params.id);
+    res.json(product);
 });
 
 routes.get('/api/products/:id/reviews', (req, res) => {
-    res.json({review: 'reviews for product'});
+    const review = Products.getReviewsById(req.params.id);
+    res.json(review);
 });
 
 routes.post('/api/products', (req, res) => {
-    res.json({ok: true});
+    let newProduct = Products.addNewProduct();
+    res.json(newProduct);
 });
 
 routes.get('/api/users', (req, res) => {
-    res.json({users: 'all users'});
+    const users = Users.all();
+    res.json(users);
 });
 
 export default routes;
