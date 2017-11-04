@@ -1,9 +1,11 @@
-export default function User(id, name) {
-    this.id = id;
-    this.name = name;
+export default function User(username, password, email) {
+    this.username = username;
+    this.password = password;
+    this.email = email;
 
     return {
-        id: this.id,
-        name: this.name
+        username: this.username,
+        password: this.password,
+        email: this.email
     }
 }

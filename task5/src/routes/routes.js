@@ -2,6 +2,7 @@ import {Router} from 'express';
 
 import {Products} from "../controllers/products.controller";
 import {Users} from "../controllers/users.controller";
+import {getErrorResponse, getTokenResponse} from "../utils/utils";
 
 const routes = Router();
 
@@ -32,6 +33,21 @@ routes.post('/api/products', (req, res) => {
 routes.get('/api/users', (req, res) => {
     const users = Users.all();
     res.json(users);
+});
+
+routes.post('/auth', (req, res) => {
+    const {username, password} = req.body;
+    const users = Users.all();
+    const user = users.find(user => user.username === username);
+
+    res.setHeader('Content-Type', 'application/json');
+
+    if (user && user.password === password) {
+        res.send(JSON.stringify(getTokenResponse(user.username, user.email)));
+    } else {
+        res.send(JSON.stringify(getErrorResponse()));
+    }
+
 });
 
 export default routes;
