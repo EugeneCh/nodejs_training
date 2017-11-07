@@ -6,7 +6,7 @@ export function getErrorResponse() {
     }
 }
 
-export function getTokenResponse(username, email) {
+export function getTokenResponse(username, email, token) {
     return {
         "code": 200,
         "message": "OK",
@@ -16,6 +16,6 @@ export function getTokenResponse(username, email) {
                 "username": username
             }
         },
-        "token": "11111"
+        "token": token
     }
 }
