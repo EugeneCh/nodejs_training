@@ -5,7 +5,7 @@ export function checkToken(req, res, next) {
     const token = req.headers['x-access-token'];
 
     if (token) {
-        jwt.verify(token, PRIVATE_KEY, (err, decoded) => {
+        jwt.verify(token, PRIVATE_KEY, (err) => {
             if (err) {
                 res.send('Wrong token');
             } else {
