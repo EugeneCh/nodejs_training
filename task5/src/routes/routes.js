@@ -1,7 +1,6 @@
 import {Router} from 'express';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
-import localStrategy from 'passport-local';
 
 import {Products} from '../controllers/products.controller';
 import {Users} from '../controllers/users.controller';
@@ -10,21 +9,6 @@ import {checkToken} from '../middlewares/check-token';
 import {PRIVATE_KEY} from '../utils/constants';
 
 const routes = Router();
-
-passport.use(new localStrategy.Strategy({
-    usernameField: 'username',
-    passwordField: 'password'
-}, (username, password, done) => {
-    const users = Users.all();
-    const user = users.find(user => user.username === username);
-
-    if (user && user.password === password) {
-        done(null, user);
-    } else {
-        done(null, false, 'Bad username/password combination');
-    }
-}
-));
 
 routes.get('/', (req, res) => {
     res.json({ok: true});
