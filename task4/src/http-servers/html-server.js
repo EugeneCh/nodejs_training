@@ -1,13 +1,13 @@
 import http from 'http';
-import {createReadStream} from 'fs';
+import {readFileSync} from 'fs';
 
 http.createServer()
     .on('request', (req, res) => {
         res.writeHead(200, {
             'Content-Type': 'text/html'
         });
-        let readStream = createReadStream('data/html-server/index.html');
-        readStream.pipe(res);
+        let data = readFileSync('data/html-server/index.html');
+        res.end(data);
     })
     .listen(3000);
 
