@@ -5,8 +5,11 @@ import passport from 'passport';
 import {Products} from '../controllers/products.controller';
 import {Users} from '../controllers/users.controller';
 import {getErrorResponse, getTokenResponse} from '../utils/utils';
-import {checkToken} from '../middlewares/check-token';
 import {PRIVATE_KEY} from '../utils/constants';
+
+import City from "../schemas/City";
+import Product from "../schemas/Product";
+import User from "../schemas/User";
 
 const routes = Router();
 
@@ -14,27 +17,34 @@ routes.get('/', (req, res) => {
     res.json({ok: true});
 });
 
-routes.get('/api/products', checkToken, (req, res) => {
+routes.get('/cities', (req, res) => {
+    City.find({}, function(err, cities) {
+        let cityMap = {};
+
+        cities.forEach(function(city) {
+            cityMap[city._id] = city;
+        });
+
+        res.send(cityMap);
+    });
+});
+
+routes.get('/api/products', (req, res) => {
     const products = Products.all();
     res.json(products);
 });
 
-routes.get('/api/products/:id', checkToken, (req, res) => {
+routes.get('/api/products/:id', (req, res) => {
     const product = Products.getProductById(+req.params.id);
     res.json(product);
 });
 
-routes.get('/api/products/:id/reviews', checkToken, (req, res) => {
-    const review = Products.getReviewsById(+req.params.id);
-    res.json(review);
-});
-
-routes.post('/api/products', checkToken, (req, res) => {
+routes.post('/api/products', (req, res) => {
     let newProduct = Products.addNewProduct();
     res.json(newProduct);
 });
 
-routes.get('/api/users', checkToken, (req, res) => {
+routes.get('/api/users', (req, res) => {
     const users = Users.all();
     res.json(users);
 });
