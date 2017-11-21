@@ -33,8 +33,9 @@ export function generateFakeCities(citiesNumber) {
         }
     });
 
+    let cities = [];
     for (let i = 0; i < citiesNumber; i++ ) {
-        let city = new City({
+        cities.push({
             name: faker.address.city(),
             country: faker.address.country(),
             capital: faker.random.boolean(),
@@ -43,13 +44,13 @@ export function generateFakeCities(citiesNumber) {
                 long: faker.address.longitude()
             }
         });
-
-        city.save(err => {
-            if (err) {
-                return console.error(err);
-            }
-        });
     }
+
+    City.insertMany(cities, err => {
+        if (err) {
+            return console.error(err);
+        }
+    });
 
     console.log(`${citiesNumber} Cities were created`);
 }
@@ -61,19 +62,20 @@ export function generateFakeProducts(productsNumber) {
         }
     });
 
+    let products = [];
     for (let i = 0; i < productsNumber; i++ ) {
-        let product = new Product({
+        products.push({
             id: faker.random.uuid(),
             name: faker.commerce.productName(),
             value: faker.commerce.price()
         });
-
-        product.save(err => {
-            if (err) {
-                return console.error(err);
-            }
-        });
     }
+
+    Product.insertMany(products, err => {
+        if (err) {
+            return console.log(err);
+        }
+    });
 
     console.log(`${productsNumber} Products were created`);
 }
@@ -85,19 +87,20 @@ export function generateFakeUsers(usersNumber) {
         }
     });
 
+    let users = [];
     for (let i = 0; i < usersNumber; i++ ) {
-        let user = new User({
+        users.push({
             username: faker.internet.userName(),
             password: faker.internet.password(),
             email: faker.internet.email()
         });
-
-        user.save(err => {
-            if (err) {
-                return console.error(err);
-            }
-        });
     }
+
+    User.insertMany(users, err => {
+        if (err) {
+            return console.log(err);
+        }
+    });
 
     console.log(`${usersNumber} Users were created`);
 }
