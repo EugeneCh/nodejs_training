@@ -26,6 +26,19 @@ export function getTokenResponse(username, email, token) {
     }
 }
 
+export function oneFakeCity() {
+    return {
+        id: faker.random.uuid(),
+        name: faker.address.city(),
+        country: faker.address.country(),
+        capital: faker.random.boolean(),
+        location: {
+            lat: faker.address.latitude(),
+            long: faker.address.longitude()
+        }
+    };
+}
+
 export function generateFakeCities(citiesNumber) {
     City.remove({}, err => {
         if (err) {
@@ -35,15 +48,7 @@ export function generateFakeCities(citiesNumber) {
 
     let cities = [];
     for (let i = 0; i < citiesNumber; i++ ) {
-        cities.push({
-            name: faker.address.city(),
-            country: faker.address.country(),
-            capital: faker.random.boolean(),
-            location: {
-                lat: faker.address.latitude(),
-                long: faker.address.longitude()
-            }
-        });
+        cities.push(oneFakeCity());
     }
 
     City.insertMany(cities, err => {
@@ -55,6 +60,13 @@ export function generateFakeCities(citiesNumber) {
     console.log(`${citiesNumber} Cities were created`);
 }
 
+export function oneFakeProduct() {
+    return {
+        name: faker.commerce.productName(),
+        value: faker.commerce.price()
+    };
+}
+
 export function generateFakeProducts(productsNumber) {
     Product.remove({}, err => {
         if (err) {
@@ -64,11 +76,7 @@ export function generateFakeProducts(productsNumber) {
 
     let products = [];
     for (let i = 0; i < productsNumber; i++ ) {
-        products.push({
-            id: faker.random.uuid(),
-            name: faker.commerce.productName(),
-            value: faker.commerce.price()
-        });
+        products.push(oneFakeProduct());
     }
 
     Product.insertMany(products, err => {
@@ -80,6 +88,14 @@ export function generateFakeProducts(productsNumber) {
     console.log(`${productsNumber} Products were created`);
 }
 
+export function oneFakeUser() {
+    return {
+        username: faker.internet.userName(),
+        password: faker.internet.password(),
+        email: faker.internet.email()
+    };
+}
+
 export function generateFakeUsers(usersNumber) {
     User.remove({}, err => {
         if (err) {
@@ -89,11 +105,7 @@ export function generateFakeUsers(usersNumber) {
 
     let users = [];
     for (let i = 0; i < usersNumber; i++ ) {
-        users.push({
-            username: faker.internet.userName(),
-            password: faker.internet.password(),
-            email: faker.internet.email()
-        });
+        users.push(oneFakeUser());
     }
 
     User.insertMany(users, err => {

@@ -1,18 +1,17 @@
-import {Users} from '../controllers/users.controller';
+import {User} from '../schemas/User';
 
 export function passportConfigLocal(passport, localStrategy) {
     passport.use(new localStrategy.Strategy({
             usernameField: 'username',
             passwordField: 'password'
         }, (username, password, done) => {
-            const users = Users.all();
-            const user = users.find(user => user.username === username);
-
-            if (user && user.password === password) {
-                done(null, user);
-            } else {
-                done(null, false, 'Bad username/password combination');
-            }
+            User.findOne({username: username}, (err, user) => {
+                if (user && user.password === password) {
+                    done(null, user);
+                } else {
+                    done(null, false, 'Bad username/password combination');
+                }
+            });
         }
     ));
 }
@@ -23,14 +22,13 @@ export function passportConfigFacebook(passport, facebookStrategy) {
             clientSecret: 'FACEBOOK_APP_SECRET',
             callbackURL: 'http://localhost:8080/authenticate/facebook/callback'
         }, (accessToken, refreshToken, profile, cb) => {
-            const users = Users.all();
-            const user = users.find(user => user.username === profile.username);
-
-            if (user) {
-                return cb(user);
-            } else {
-                cb(null, false, 'Bad username/password combination');
-            }
+            User.findOne({username: profile.username}, (err, user) => {
+                if (user) {
+                    return cb(user);
+                } else {
+                    cb(null, false, 'Bad username/password combination');
+                }
+            });
         }
     ));
 }
@@ -41,14 +39,13 @@ export function passportConfigTwitter(passport, twitterStrategy) {
             consumerSecret: 'TWITTER_CONSUMER_SECRET',
             callbackURL: 'http://localhost:8080/auth/twitter/callback'
         }, (token, tokenSecret, profile, cb) => {
-            const users = Users.all();
-            const user = users.find(user => user.username === profile.username);
-
-            if (user) {
-                return cb(user);
-            } else {
-                cb(null, false, 'Bad username/password combination');
-            }
+            User.findOne({username: profile.username}, (err, user) => {
+                if (user) {
+                    return cb(user);
+                } else {
+                    cb(null, false, 'Bad username/password combination');
+                }
+            });
         }
     ));
 }
@@ -60,14 +57,13 @@ export function passportConfigGoogle(passport, googleStrategy) {
             callbackURL: 'http://yourdormain:3000/auth/google/callback',
             passReqToCallback   : true
         }, (request, accessToken, refreshToken, profile, done) => {
-            const users = Users.all();
-            const user = users.find(user => user.username === profile.username);
-
-            if (user) {
-                return done(user);
-            } else {
-                done(null, false, 'Bad username/password combination');
-            }
+            User.findOne({username: profile.username}, (err, user) => {
+                if (user) {
+                    return done(user);
+                } else {
+                    done(null, false, 'Bad username/password combination');
+                }
+            });
         }
     ));
 }
