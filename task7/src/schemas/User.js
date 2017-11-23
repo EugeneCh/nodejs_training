@@ -12,7 +12,13 @@ const User = mongoose.Schema({
     email: {
         type: String,
         required: [true, 'Email is required']
-    }
+    },
+    lastModifiedDate: Date
+});
+
+User.pre('save', function(next) {
+    this.lastModifiedDate = new Date();
+    next();
 });
 
 export default mongoose.model('User', User);

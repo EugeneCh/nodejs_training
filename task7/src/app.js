@@ -19,6 +19,8 @@ app.use('/', routes);
 
 mongoose.Promise = global.Promise;
 
+console.log('Please use default port on local mongoDB instance to generate fake data');
+
 mongoose.connect('mongodb://localhost/local', {
     useMongoClient: true
 });

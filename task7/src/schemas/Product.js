@@ -5,7 +5,13 @@ const Product = mongoose.Schema({
         type: String,
         required: [true, 'Please provide product name']
     },
-    value: String
+    value: String,
+    lastModifiedDate: Date
+});
+
+Product.pre('save', function(next) {
+    this.lastModifiedDate = new Date();
+    next();
 });
 
 export default mongoose.model('Product', Product);
