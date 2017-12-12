@@ -1,0 +1,314 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: EPAM NodeJS Training API
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /cities:
+    post:
+      tags:
+      - cities
+      summary: Add a new city to the store
+      operationId: addCity
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: City object that needs to be added to the store
+        required: true
+        schema:
+          $ref: '#/definitions/City'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/City'
+        405:
+          description: Invalid input
+    get:
+      tags:
+      - cities
+      summary: Finds all the cities
+      operationId: findCities
+      produces:
+      - application/json
+      parameters:
+      - name: status
+        in: query
+        description: Find all cities
+        required: true
+        type: array
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/City'
+  /cities/{cityId}:
+    put:
+      tags:
+      - cities
+      summary: Update city or create new
+      operationId: updateCity
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: cityId
+        in: path
+        description: Update or create city in store
+        type: object
+        required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/City'
+    delete:
+      tags:
+      - cities
+      summary: Delete a city
+      operationId: deleteCity
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: cityId
+        description: Delete city by ID from the store
+        type: array
+        required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/City'
+        404:
+          description: City not found
+  /products:
+    post:
+      tags:
+      - products
+      summary: Add a new product to the store
+      operationId: addProduct
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Product object that needs to be added to the store
+        required: true
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Product'
+        405:
+          description: Invalid input
+    get:
+      tags:
+      - products
+      summary: Finds all the products
+      operationId: findProducts
+      produces:
+      - application/json
+      parameters:
+      - name: status
+        in: query
+        description: Find all products
+        required: true
+        type: array
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+  /products/{productId}:
+    get:
+      tags:
+      - products
+      summary: Finds one product
+      operationId: findProduct
+      produces:
+      - application/json
+      parameters:
+      - name: productId
+        in: path
+        description: Find one specific product
+        required: true
+        type: array
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+    delete:
+      tags:
+      - products
+      summary: Delete a product
+      operationId: deleteProduct
+      produces:
+      - application/json
+      parameters:
+      - name: productId
+        in: path
+        description: Delete product by ID from the store
+        type: array
+        required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Product'
+        404:
+          description: Product not found
+  /users:
+    get:
+      tags:
+      - users
+      summary: Finds all the users
+      operationId: findUsers
+      produces:
+      - application/json
+      parameters:
+      - name: status
+        in: query
+        description: Find all users
+        required: true
+        type: array
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+  /users/{userId}:
+    get:
+      tags:
+      - users
+      summary: Finds one user
+      operationId: findUser
+      produces:
+      - application/json
+      parameters:
+      - name: userId
+        in: path
+        description: Find one specific user
+        required: true
+        type: array
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+    delete:
+      tags:
+      - users
+      summary: Delete a user
+      operationId: deleteUser
+      produces:
+      - application/json
+      parameters:
+      - name: userId
+        in: path
+        description: Delete user by ID from the store
+        type: array
+        required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        404:
+          description: User not found
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  User:
+    type: object
+    required:
+    - username
+    - password
+    - email
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+      email:
+        type: string
+      lastModifiedDate:
+        type: object
+    xml:
+      name: User
+  Product:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        type: string
+      value:
+        type: string
+      lastModifiedDate:
+        type: object
+    xml:
+      name: Product
+  City:
+    type: object
+    required:
+    - capital
+    properties:
+      id:
+        type: string
+        example: '1241fdfsdg4345'
+      name:
+        type: string
+        example: 'Minsk'
+      country:
+        type: string
+        example: Belarus
+      lastModifiedDate:
+        type: object
+      capital:
+        type: boolean
+      location:
+        type: object
+        description: latitude and longitude of the city
+        properties:
+          lat:
+            type: number
+          long:
+            type: number
+    xml:
+      name: City
